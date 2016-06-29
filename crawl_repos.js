@@ -45,12 +45,6 @@ function crawl_repos(repo) {
                 console.log(err);
             })
             .finally(function () {
-                // var repo_list = [];
-                // //crawl BitTiger repos
-                // var repository_list = github_info['repository_list'];
-                // for (var i = 0; i < repository_list.length; i++){
-                //     repo_list.push(Repo.crawl_repos(repository_list[i]));
-                // }
                 console.log('finished crawling: ' + repo.full_name);
 
                 fulfill(repo_info);
@@ -68,34 +62,14 @@ function crawl_repos(repo) {
                         } else {
                             // console.log('page is not empty in craw_repos.js');
                             fulfill(body);
-                            //console.log(body.length);
-                            // var should_continue = parseBody(body);
-                            // if (should_continue) {
-                            //     fulfill(body);
-                            // } else {
-                            //     reject('outdated events');
-                            // }
+
                         }
                     })
                 })
             };
         }
 
-        function parseBody(body) {
 
-            var should_continue = true;
-            if (body[0].created_at < last_week_date) {
-                should_continue = false;
-            } else {
-                for (var i = 0; i < body.length; i++) {
-                    // event_type = body[i].type;
-                    event_date = body[i].created_at;
-
-                    
-                }
-            }
-            return should_continue;
-        }
     });
 }
 
@@ -115,8 +89,8 @@ function make_option(page_number, repo_full_name) {
             'User-Agent': 'request'
         },
         auth: { //HTTP Authentication
-            user: username,
-            pass: password
+            user: 'dalianmao22233',
+            pass: 'Aa1313250!'
         },
         json: true
     };
