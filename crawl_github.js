@@ -8,6 +8,7 @@ const Firebase = require('firebase');
 
 var ref = new Firebase(Account.firebase_url);
 var repo_list_ref = ref.child("repo_list"); //repo list
+var current_time_ref = ref.child("current_time");//current time
 
 
 //test auth(login process)
@@ -32,7 +33,7 @@ var crawl_github = function (production) {
     }
     var current_time = Utils.get_current_timestamp();
     var funcs = Promise.resolve(Utils.make_range(1, 10).map((n) => makeRequest(make_option(n), 'repository_list')));
-    repo_list_ref.child('current_time').set(current_time);
+    current_time_ref.set(current_time);
     
     funcs
         .mapSeries(iterator)
@@ -56,7 +57,7 @@ var crawl_github = function (production) {
                     console.log(err);
                 })
                 .then(function (repo_event) {
-                    repo_list_ref.set(repos_list);
+                    repo_list_ref.set(123);
                 })
         })
 
