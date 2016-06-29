@@ -57,7 +57,11 @@ var crawl_github = function (production) {
                     console.log(err);
                 })
                 .then(function (repo_event) {
-                    repo_list_ref.set(123);
+                    for(var i = 0; i < repo_event.length; i++){
+                        var repo = repo_event[i].repo_name;
+                        repo_list_ref.update(repo)
+                    }
+                    // repo_list_ref.set()
                 })
         })
 
