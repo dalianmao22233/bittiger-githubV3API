@@ -40,24 +40,24 @@ var crawl_github = function (production) {
             console.log(err);
         })
         .finally(function () {
-            var repo_list = [];
+            var repos_list = [];
             
             //crawl BitTiger repos
             var repository_list = github_info['repository_list'];
             for (var i = 0; i < repository_list.length; ++i){
-                repo_list.push(Repo.crawl_repos(repository_list[i]));
+                repos_list.push(Repo.crawl_repos(repository_list[i]));
 
             }
             // console.log("repo_list:" + repo_list['repo.full_name']);
             // repo_list_ref.child('events').set(Repo.crawl_repos());
             // repo_list_ref.child('list').set(1234);
-            Promise.all(repo_list)
+            Promise.all(repos_list)
                 .catch(function (err) {
                     console.log(err);
                 })
-                .then(function (repo_events) {
-                    
-                }) 
+                .then(function (repo_event) {
+                    repo_list_ref.set(repos_list);
+                })
         })
 
     function iterator(f) {
@@ -93,8 +93,8 @@ var crawl_github = function (production) {
                 'User-Agent': 'request'
             },
             auth: { // HTTP Authentication
-                user: Account.username,
-                pass: Account.password
+                user: 'dalianmao22233',
+                pass: 'Aa1313250!'
             },
             json: true
         };
@@ -104,4 +104,4 @@ function terminate_app() {
     console.log("Finished!");
 }
 
-exports.crawl_github = crawl_github_auth();
+exports.crawl_github = crawl_github_auth;
