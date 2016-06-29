@@ -49,22 +49,13 @@ var crawl_github = function (production) {
                 repos_list.push(Repo.crawl_repos(repository_list[i]));
 
             }
-            // console.log("repo_list:" + repo_list['repo.full_name']);
-            // repo_list_ref.child('events').set(Repo.crawl_repos());
-            // repo_list_ref.child('list').set(1234);
             Promise.all(repos_list)
                 .catch(function (err) {
                     console.log(err);
                 })
                 .then(function (repo_event) {
-                    for(var i = 0; i < repo_event.length; i++){
-                        // var repo = repo_event[i].repo_name;
-                        // repo_list_ref.update(repo)
-
-                        //this one is successful.!!!!!!!!
-                        repo_list_ref.set(repo_event[i]);
-                    }
-                    // repo_list_ref.set()
+                    var top25_repo = repo_event.slice(0,25);
+                    var repo_events_update = repo_list_ref.child('repo').set(top25_repo);
                 })
         })
 
