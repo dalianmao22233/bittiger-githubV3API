@@ -2,72 +2,46 @@ const Account = require('./configs/account');
 const Request = require('request');
 const Promise = require('bluebird');
 const Utils = require('./helpers/my_utils');
-const Repo = require('./crawl_repos');
 
 
-function crawl_contributors(cont) {
-
-    return new Promise(function (fulfill, reject) {
-        var cont_info = {
-            'name': cont.login,
-            'contributions_count': cont.contributions
-        }
+function crawl_contributors(repo_full_name, callback) {
 
 
-        var funcs_cont = Promise.resolve(Utils.make_range(1, 10).map((n) => makeRequest(make_option_cont(n, repo.full_name))));
+    var url = "https://api.github.com/repos/" + repo_full_name + "/stats/contributors";
+    var return_list = [];
 
-        funcs_cont
-            .mapSeries(iterator)
-            .catch(function (err) {
-                console.log(err);
-            })
-            .finally(function () {
-                fulfill(cont_info);
-            })
-
-        function makeRequest(option) {
-            return function () {
-                return new Promise(function (fulfill, reject) {
-                    Request(option, function (error, response, body) {
-                        if (error) {
-                            reject(error);
-                        } else if (body.length == 0) {
-                            reject('page empty in craw_cont.js');
-                        } else {
-                            fulfill(body);
-
-                        }
-                    })
-                })
-            };
-        }
-
-
-    });
-}
-
-function iterator(f) {
-    return f()
-}
-
-
-function make_option_cont(page_number, repo_full_name) {
-    return {
-        url: 'https://api.github.com/repos/' + repo_full_name + '/contributors',
-        qs: { //Query string data
-            page: page_number
-        },
-        method: 'GET',
-        headers: {
+    Request({
+        url: url,
+        json: true,
+        method: 'GET', //Specify the method
+        headers: { //Define headers
             'User-Agent': 'request'
         },
-
         auth: { //HTTP Authentication
             user: 'dalianmao22233',
             pass: 'Aa1313250!'
         },
-        json: true
+    }, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+            if (body == null || body.length == 0) {
+                return callback(error || {statusCode: response.statusCodes});
+            }
+            for (var i = 0; i < body.length; ++i) {
+                var cont_info = {
+                    'contributor': body[i].author.login,
+                    'url': body[i].author.url,
+                    'total': body[i].total
+                }
+                return_list.push(cont_info);
 
-    };
+            }
+            callback(null, return_list);
+        }
+        else {
+            console.log("err");
+        }
+    })
+
+
 }
 exports.crawl_contributors = crawl_contributors;
